@@ -6,16 +6,16 @@ namespace Pathfinder
     {
         private static void Main()
         {
-            var mapImage = new Bitmap("SuperMap.png");
+            var mapImage = new Bitmap("Map.png");
 
             var map = Map.Read(mapImage);
             
-            var (path, explored) = Algorithm.ShortestPath(
+            var path = Algorithm.ShortestPath(
                 map.Graph, 
                 map.StartingPosition, 
                 map.TargetPosition);
 
-            var result = map.Draw(path, explored);
+            var result = map.DrawPath(path);
 
             new ShowResult(result).ShowDialog();
         }

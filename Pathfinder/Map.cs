@@ -22,18 +22,10 @@ namespace Pathfinder
         public Node TargetPosition { get; }
         public IReadOnlyDictionary<Node, Vec2> NodeCoordinates { get; }
 
-        public Bitmap Draw(IEnumerable<Node> path, IEnumerable<Node> explored)
+        public Bitmap DrawPath(IEnumerable<Node> path)
         {
             var bitmap = (Bitmap)Bitmap.Clone();
 
-            bitmap = DrawExplored(explored, bitmap);
-            bitmap = DrawPath(path, bitmap);
-
-            return bitmap;
-        }
-
-        public Bitmap DrawPath(IEnumerable<Node> path, Bitmap bitmap)
-        {
             var pointsToColor = path
                 .Skip(1)
                 .SkipLast(1)
@@ -42,21 +34,6 @@ namespace Pathfinder
             foreach (var point in pointsToColor)
             {
                 bitmap.SetPixel(point.X, point.Y, Color.Blue);
-            }
-
-            return bitmap;
-        }
-
-        public Bitmap DrawExplored(IEnumerable<Node> explored, Bitmap bitmap)
-        {
-            var pointsToColor = explored
-                .Skip(1)
-                .SkipLast(1)
-                .Select(a => NodeCoordinates[a]);
-
-            foreach (var point in pointsToColor)
-            {
-                bitmap.SetPixel(point.X, point.Y, Color.Orange);
             }
 
             return bitmap;
