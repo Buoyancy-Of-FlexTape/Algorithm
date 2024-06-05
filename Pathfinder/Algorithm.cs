@@ -21,8 +21,11 @@ namespace Pathfinder
             }
         }
 
-        public static IEnumerable<Node> ShortestPath(Graph graph, Node from, Node to)
+        public static (IEnumerable<Node>, IEnumerable<Node>) ShortestPath(Graph graph, Node from, Node to)
         {
+            List<Node> exploredList = new List<Node>();
+
+
             foreach (Node node in graph.Nodes)
             {
                 node.Cost = double.MaxValue;
@@ -62,13 +65,26 @@ namespace Pathfinder
 
                 // We zijn nu klaar, markeer de current node als explored
                 curNode.Value.Explored = true;
+                
+                if (curNode.Value != to)
+                {
+                    exploredList.Add(curNode.Value);
+                } else
+                {
+                    // We can now stop, because all the edges have a weight of 1 or 1.4
+                    break;
+                }
             }
 
-            var result = to.Parent;
+            if (to.Parent == null)
+            {
+                // There is no valid route available
+                return (new List<Node>(), exploredList);
+            }
 
-            return LinkedParentToList(result);
+            return (LinkedParentToList(to.Parent), exploredList);
 
-            return Enumerable.Empty<Node>();
+            //return Enumerable.Empty<Node>();
         }
 
         public static IEnumerable<Node> LinkedParentToList(Node node)
